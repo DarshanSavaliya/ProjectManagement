@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ProjectManagement.Models {
     public class TaskAssigned {
@@ -15,6 +16,6 @@ namespace ProjectManagement.Models {
         [Required]
         [ForeignKey("Project")]
         public int ProjectId { get; set; }
-        public IdentityUser? Assignee { get; set; }
+        public ApplicationUser? Assignee { get; set; } 
     }
 }

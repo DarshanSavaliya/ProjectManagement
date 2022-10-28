@@ -8,7 +8,7 @@ namespace ProjectManagement.Models {
         public string Name { get; set; } = "";
         public string? Description { get; set; }
         public List<TaskAssigned> Tasks { get; set; } = new List<TaskAssigned>();
-        [ForeignKey("IdentityUser")]
+        [ForeignKey("ApplicationUser")]
         public string Admin { get; set; } = "";
         public List<UserProject> Members { get; set; } = new List<UserProject>();
     }

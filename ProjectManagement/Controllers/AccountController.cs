@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using ProjectManagement.Models;
 using ProjectManagement.Models.DTO;
 using ProjectManagement.Models.Helper;
 using System.IdentityModel.Tokens.Jwt;
@@ -11,16 +12,18 @@ namespace ProjectManagement.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController: ControllerBase {
-        private readonly UserManager<IdentityUser> userManager;
+        private readonly UserManager<ApplicationUser> userManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IConfiguration configuration;
 
-        public AccountController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration) {
+        public AccountController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration) {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.configuration = configuration;
         }
 
+        // POST: api/Account/Login
+        // Login and get JWT access token
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult> Login(UserDTO userDTO) {
@@ -48,6 +51,8 @@ namespace ProjectManagement.Controllers {
             });
         }
 
+        // POST: api/Account/Register
+        // Register new user
         [HttpPost]
         [Route("Register")]
         public async Task<ActionResult> Register(UserDTO userDTO) {
@@ -58,7 +63,7 @@ namespace ProjectManagement.Controllers {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
             }
 
-            IdentityUser user = new() {
+            ApplicationUser user = new() {
                 UserName = userDTO.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Email = userDTO.Email
@@ -77,6 +82,9 @@ namespace ProjectManagement.Controllers {
 
         }
 
+        // POST: api/Account/Register-Admin
+        // Register Admin Account
+        // TODO: should be only accessible to admins (Need a default admin account to be set up)
         [HttpPost]
         [Route("Register-Admin")]
         public async Task<ActionResult> RegisterAdmin(UserDTO userDTO) {
@@ -87,7 +95,7 @@ namespace ProjectManagement.Controllers {
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
             }
 
-            IdentityUser user = new() {
+            ApplicationUser user = new() {
                 UserName = userDTO.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 Email = userDTO.Email
@@ -112,7 +120,7 @@ namespace ProjectManagement.Controllers {
             return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
         }
 
-
+        // Generate Security Token
         private JwtSecurityToken GetToken(List<Claim> authClaims) {
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Key"]));
 

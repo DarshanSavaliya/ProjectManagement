@@ -2,7 +2,7 @@
 using ProjectManagement.Models;
 
 namespace ProjectManagement.Data {
-    public class DataContext: IdentityDbContext {
+    public class DataContext: IdentityDbContext<ApplicationUser> {
         public DataContext(DbContextOptions<DataContext> options): base(options) {
         }
 
@@ -11,7 +11,6 @@ namespace ProjectManagement.Data {
             builder.Entity<UserProject>(
                 b => {
                     b.ToTable("UserProjects");
-                    b.HasKey(p => new { p.ProjectId, p.Member });
                 }
             );
         }

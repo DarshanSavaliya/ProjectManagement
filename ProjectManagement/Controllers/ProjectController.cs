@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManagement.Models;
 using ProjectManagement.Models.DTO;
@@ -9,9 +10,12 @@ namespace ProjectManagement.Controllers {
     [ApiController]
     public class ProjectController: ControllerBase {
         private readonly DataContext _context;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public ProjectController(DataContext context) {
+        public ProjectController(DataContext context, UserManager<ApplicationUser> userManager) {
             _context = context;
+            this.userManager = userManager;
+            this.userManager = userManager;
         }
 
         // GET: api/Project
@@ -25,6 +29,9 @@ namespace ProjectManagement.Controllers {
             if(user == null) return Forbid();
 
             var projects = await _context.Projects.ToListAsync();
+
+            var roles = await userManager.GetRolesAsync(user);
+            if(roles.Contains(UserRoles.Admin)) return projects;
 
             foreach(var project in projects) {
                 await _context.Entry(project).Collection(b => b.Members).LoadAsync();
