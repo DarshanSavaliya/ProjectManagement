@@ -11,8 +11,7 @@ namespace ProjectManagement.Data {
             builder.Entity<UserProject>(
                 b => {
                     b.ToTable("UserProjects");
-                    b.HasOne(x => x.User).WithMany().HasForeignKey("UserId");
-                    b.HasOne(x => x.Project).WithMany().HasForeignKey("ProjectId");
+                    b.HasKey(p => new { p.ProjectId, p.Member });
                 }
             );
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models {
     public class TaskAssigned {
@@ -11,7 +12,9 @@ namespace ProjectManagement.Models {
         public int WorkHours { get; set; } = 0;
         public DateTime? Reminder { get; set; }
         public string? Attachment { get; set; }
-        public Project Project { get; set; } = new Project();
+        [Required]
+        [ForeignKey("Project")]
+        public int ProjectId { get; set; }
         public IdentityUser? Assignee { get; set; }
     }
 }

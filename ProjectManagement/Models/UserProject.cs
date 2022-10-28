@@ -1,11 +1,14 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProjectManagement.Models {
     public class UserProject {
-        [Key]
-        public int Id { get; set; }
-        public IdentityUser User { get; set; } = new IdentityUser();
-        public Project Project { get; set; } = new Project();
+        [Required]
+        [ForeignKey("IdentityUser")]
+        public string Member { get; set; }
+        [Required]
+        [ForeignKey("Project")]
+        public int ProjectId { get; set; }
     }
 }
